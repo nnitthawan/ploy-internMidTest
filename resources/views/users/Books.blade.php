@@ -13,63 +13,63 @@
         <h1>รายการหนังสือ</h1>
 
         @if($books->isEmpty())
-        <div class="empty-state">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-            <p>ยังไม่มีหนังสือ</p>
-        </div>
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <p>ยังไม่มีหนังสือ</p>
+            </div>
         @else
-        @foreach($books as $book)
-        <div class="books-card">
-            <div>
-                <img src="{{ asset('storage/' . $book->image) }}" alt="{{ $book->name }}">
-            </div>
-            
-            <div class="books-info">
-                <div class="label">ชื่อหนังสือ</div>
-                <div class="value">{{ $book->name }}</div>
-            </div>
+            @foreach($books as $book)
+                <div class="books-card">
+                    <div>
+                        <img src="{{ Str::contains($book->image, 'images/') ? asset($book->image) : asset('images/' . $book->image) }}"
+                            alt="{{ $book->name }}">
+                    </div>
+                    <div class="books-info">
+                        <div class="label">ชื่อหนังสือ</div>
+                        <div class="value">{{ $book->name }}</div>
+                    </div>
 
-            <div class="books-info">
-                <div class="label">ผู้เขียน</div>
-                <div class="value">{{ $book->author }}</div>
-            </div>
+                    <div class="books-info">
+                        <div class="label">ผู้เขียน</div>
+                        <div class="value">{{ $book->author }}</div>
+                    </div>
 
-            <div class="books-info">
-                <div class="label">หมวดหมู่</div>
-                <div class="value">{{ $book->category->name ?? '-' }}</div>
-            </div>
+                    <div class="books-info">
+                        <div class="label">หมวดหมู่</div>
+                        <div class="value">{{ $book->category->name ?? '-' }}</div>
+                    </div>
 
-            <div class="books-info">
-                <div class="label">ราคา</div>
-                <div class="value">{{ number_format($book->price, 2) }} บาท</div>
-            </div>
+                    <div class="books-info">
+                        <div class="label">ราคา</div>
+                        <div class="value">{{ number_format($book->price, 2) }} บาท</div>
+                    </div>
 
-            <div class="books-actions">
-                <button class="btn-edit"
-                    onclick="openEditModal(
-                        '{{ $book->id }}',
-                        '{{ $book->name }}',
-                        '{{ $book->price }}',
-                        '{{ $book->author }}',
-                        '{{ $book->image }}',
-                        '{{ $book->category_id }}'
-                    )">
-                    แก้ไข
-                </button>
+                    <div class="books-actions">
+                        <button class="btn-edit" onclick="openEditModal(
+                                        '{{ $book->id }}',
+                                        '{{ $book->name }}',
+                                        '{{ $book->price }}',
+                                        '{{ $book->author }}',
+                                        '{{ $book->image }}',
+                                        '{{ $book->category_id }}'
+                                    )">
+                            แก้ไข
+                        </button>
 
-                <form action="{{ route('books.destroy', $book->id) }}" method="POST"
-                    onsubmit="return confirm('แน่ใจว่าต้องการลบ?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn-delete">
-                        ลบ
-                    </button>
-                </form>
-            </div>
-        </div>
-        @endforeach
+                        <form action="{{ route('books.destroy', $book->id) }}" method="POST"
+                            onsubmit="return confirm('แน่ใจว่าต้องการลบ?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-delete">
+                                ลบ
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
         @endif
 
         <button class="add-book-btn" onclick="openModal()">+ เพิ่มหนังสือ</button>
@@ -99,14 +99,14 @@
                 <div class="form-group">
                     <label for="category">หมวดหมู่</label>
                     @if($categories->count() > 0)
-                    <select id="category" name="category_id" required>
-                        <option value="">-- เลือกหมวดหมู่ --</option>
-                        @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
+                        <select id="category" name="category_id" required>
+                            <option value="">-- เลือกหมวดหมู่ --</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
                     @else
-                    <input type="text" name="new_category" placeholder="ยังไม่มีหมวด กรุณาเพิ่มหมวดใหม่" required>
+                        <input type="text" name="new_category" placeholder="ยังไม่มีหมวด กรุณาเพิ่มหมวดใหม่" required>
                     @endif
                 </div>
 
@@ -143,7 +143,7 @@
             document.getElementById('price').value = '';
             document.getElementById('author').value = '';
             document.getElementById('image').value = '';
-            
+
             const categorySelect = document.querySelector('select[name="category_id"]');
             if (categorySelect) {
                 categorySelect.value = '';
@@ -173,14 +173,15 @@
                 categorySelect.value = categoryId;
             }
 
-            document.getElementById('oldImage').src = '/storage/' + image;
+            let imageSrc = image.includes('images/') ? '/' + image : '/images/' + image;
+            document.getElementById('oldImage').src = imageSrc;
             document.getElementById('oldImageBox').style.display = 'block';
 
             document.getElementById('bookModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
 
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
                 closeModal();
             }
